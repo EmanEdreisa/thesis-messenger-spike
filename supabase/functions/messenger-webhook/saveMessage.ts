@@ -1,4 +1,4 @@
-type MessagingEvent = {
+export type MessagingEvent = {
   sender: { id: string };
   timestamp: number;
   message?: { mid: string; text?: string };
@@ -23,12 +23,14 @@ function getEventType(event: MessagingEvent): string {
   return "unknown";
 }
 
+// Returns whether the row is now saved (either just inserted, or already
+// there from an earlier delivery) so the caller knows if it's safe to reply.
 export async function saveMessage(
   event: MessagingEvent,
   pageId: string,
   supabaseUrl: string,
   serviceRoleKey: string,
-): Promise<void> {
+): Promise<boolean> {
   const row = {
     meta_message_id: getMetaMessageId(event),
     page_id: pageId,
@@ -57,4 +59,6 @@ export async function saveMessage(
     // Never log message_text or sender_id — just that a save failed.
     console.log("failed to save message, status:", response.status);
   }
+
+  return response.ok;
 }

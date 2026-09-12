@@ -1,5 +1,11 @@
 import { isValidSignature } from "./verifySignature.ts";
-import { saveMessage } from "./saveMessage.ts";
+import { saveMessage, type MessagingEvent } from "./saveMessage.ts";
+import { sendReply } from "./sendReply.ts";
+
+// Provided by the Supabase/Deno edge runtime. Declared here only so TypeScript
+// knows about it — waitUntil lets a promise keep running after we've already
+// returned the response, instead of the isolate freezing right away.
+declare const EdgeRuntime: { waitUntil(promise: Promise<unknown>): void };
 
 // Meta calls this with GET once, when you save the webhook URL in the App Dashboard,
 // to confirm you control this endpoint before it will send real events here.
@@ -32,12 +38,19 @@ async function handleEvent(req: Request): Promise<Response> {
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  const pageAccessToken = Deno.env.get("PAGE_ACCESS_TOKEN") ?? "";
 
   try {
     const body = JSON.parse(rawBody);
     for (const entry of body.entry ?? []) {
-      for (const event of entry.messaging ?? []) {
-        await saveMessage(event, entry.id, supabaseUrl, serviceRoleKey);
+      for (const event of (entry.messaging ?? []) as MessagingEvent[]) {
+        const saved = await saveMessage(event, entry.id, supabaseUrl, serviceRoleKey);
+
+        // Only real messages get the auto-reply — not postbacks or referrals.
+        // waitUntil lets this run after the 200 goes back to Meta.
+        if (saved && event.message) {
+          EdgeRuntime.waitUntil(sendReply(event.sender.id, pageAccessToken));
+        }
       }
     }
   } catch (error) {
