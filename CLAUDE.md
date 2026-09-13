@@ -100,6 +100,12 @@ should not be in the file.
 
 \- Do not add dependencies without telling me why plain Deno cannot do it.
 
+\- Comments are rare. Only write one when I would forget something
+
+&#x20; non-obvious later. Never explain what a line does, never justify a
+
+&#x20; decision in a comment, never reference this file in code.
+
 
 
 \## Webhook rules (these cause silent failures — follow exactly)

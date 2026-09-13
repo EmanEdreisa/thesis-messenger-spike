@@ -25,13 +25,9 @@
 
   <div id="fb-root"></div>
   <script>
-    // Public by design — the App ID is meant to be visible in client-side code.
-    // No secret ever goes in this file (see CLAUDE.md security rules).
     const META_APP_ID = "28199264823035189";
 
-    // From App Dashboard > Facebook Login for Business > Configurations.
-    // That configuration is what actually asks for pages_show_list,
-    // pages_messaging, pages_manage_posts and pages_read_engagement — not this file.
+    // from App Dashboard > Facebook Login for Business > Configurations
     const META_LOGIN_CONFIG_ID = "2360381744730579";
 
     window.fbAsyncInit = function () {
@@ -77,14 +73,12 @@
         return;
       }
 
-      // pages_show_list is what lets us ask for the Pages the user just granted.
       FB.api("/me/accounts", handlePagesResponse);
     }
 
     function connectFacebookPage() {
       FB.login(handleLoginResponse, {
         config_id: META_LOGIN_CONFIG_ID,
-        response_type: "token",
       });
     }
 
