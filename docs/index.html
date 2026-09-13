@@ -28,12 +28,17 @@
   <button id="publish-button">Publish to Page</button>
   <p id="publish-status"></p>
 
+  <h2>Recent Messages</h2>
+  <button id="refresh-button">Refresh</button>
+  <ul id="messages-list"></ul>
+
   <div id="fb-root"></div>
   <script>
     const META_APP_ID = "28199264823035189";
     const META_LOGIN_SCOPE = "pages_show_list,pages_messaging,pages_manage_posts,pages_read_engagement";
 
     const PUBLISH_POST_URL = "https://axsgfztljaksrhzwpcca.supabase.co/functions/v1/publish-post";
+    const LIST_MESSAGES_URL = "https://axsgfztljaksrhzwpcca.supabase.co/functions/v1/list-messages";
     // Project Settings > API > Publishable key
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_fafawNNfN0YbG9GI-i1hAw_oSx00LGJ";
 
@@ -126,10 +131,43 @@
       }
     }
 
+    function renderMessages(messages) {
+      const list = document.getElementById("messages-list");
+      list.innerHTML = "";
+
+      for (const message of messages) {
+        const item = document.createElement("li");
+        const text = message.messageText ?? "(no text)";
+        const time = new Date(message.createdAt).toLocaleString();
+        item.textContent = message.sender + " — " + text + " — " + time;
+        list.appendChild(item);
+      }
+    }
+
+    async function loadMessages() {
+      try {
+        const response = await fetch(LIST_MESSAGES_URL, {
+          headers: { Authorization: "Bearer " + SUPABASE_PUBLISHABLE_KEY },
+        });
+
+        if (!response.ok) {
+          console.log("load messages failed, status:", response.status);
+          return;
+        }
+
+        const result = await response.json();
+        renderMessages(result.messages);
+      } catch (error) {
+        console.log("load messages failed:", error);
+      }
+    }
+
     document.getElementById("connect-button").addEventListener("click", connectFacebookPage);
     document.getElementById("publish-button").addEventListener("click", publishPost);
+    document.getElementById("refresh-button").addEventListener("click", loadMessages);
 
     loadFacebookSdk();
+    loadMessages();
   </script>
 </body>
 </html>
