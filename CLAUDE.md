@@ -26,6 +26,12 @@ This repo is only what Meta App Review needs to see:
 
 4\. Publishing a post to the Facebook Page
 
+5\. A small web page (plain HTML, CSS, JavaScript in one file) used to
+
+&#x20;  demonstrate 1-4 for the Meta App Review screencast. This is a demo
+
+&#x20;  page, not the mobile app. No React, no build step, no framework.
+
 
 
 Out of scope: the mobile app UI, Gemini order extraction, the KPI dashboard,
@@ -67,6 +73,14 @@ should not be in the file.
 \- TypeScript, but keep types minimal. A few type aliases. No generics, no utility
 
 &#x20; types, no complex inference.
+
+\- For the demo web page: plain HTML, CSS and JavaScript in one file. No React,
+
+&#x20; no build step, no npm packages, no CSS framework. Use simple element ids and
+
+&#x20; plain function names. Keep the styling minimal - a few lines of CSS, default
+
+&#x20; fonts, no design system.
 
 \- Keep each function file under about 150 lines. Split by feature.
 
@@ -125,6 +139,12 @@ should not be in the file.
 \- Customer names are masked by design in this study. Do not store real names or
 
 &#x20; profile data.
+
+\- The demo web page runs in a browser, so anything in it is public. Never put
+
+&#x20; the Supabase secret key, the App Secret, or a Page access token in the web
+
+&#x20; page. Only the Supabase publishable key and the Meta App ID belong there.
 
 
 
