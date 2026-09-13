@@ -26,9 +26,7 @@
   <div id="fb-root"></div>
   <script>
     const META_APP_ID = "28199264823035189";
-
-    // from App Dashboard > Facebook Login for Business > Configurations
-    const META_LOGIN_CONFIG_ID = "2360381744730579";
+    const META_LOGIN_SCOPE = "pages_show_list,pages_messaging,pages_manage_posts,pages_read_engagement";
 
     window.fbAsyncInit = function () {
       FB.init({
@@ -78,7 +76,7 @@
 
     function connectFacebookPage() {
       FB.login(handleLoginResponse, {
-        config_id: META_LOGIN_CONFIG_ID,
+        scope: META_LOGIN_SCOPE,
       });
     }
 
