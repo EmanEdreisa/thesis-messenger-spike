@@ -26,7 +26,7 @@ This repo is only what Meta App Review needs to see:
 
 4\. Publishing a post to the Facebook Page
 
-5\. A small web page (plain HTML, CSS, JavaScript in one file) used to
+5\. A small docs page (plain HTML, CSS, JavaScript in one file) used to
 
 &#x20;  demonstrate 1-4 for the Meta App Review screencast. This is a demo
 
@@ -74,7 +74,7 @@ should not be in the file.
 
 &#x20; types, no complex inference.
 
-\- For the demo web page: plain HTML, CSS and JavaScript in one file. No React,
+\- For the demo docs page: plain HTML, CSS and JavaScript in one file. No React,
 
 &#x20; no build step, no npm packages, no CSS framework. Use simple element ids and
 
@@ -140,9 +140,9 @@ should not be in the file.
 
 &#x20; profile data.
 
-\- The demo web page runs in a browser, so anything in it is public. Never put
+\- The demo docs page runs in a browser, so anything in it is public. Never put
 
-&#x20; the Supabase secret key, the App Secret, or a Page access token in the web
+&#x20; the Supabase secret key, the App Secret, or a Page access token in the docs
 
 &#x20; page. Only the Supabase publishable key and the Meta App ID belong there.
 

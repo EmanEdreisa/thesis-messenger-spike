@@ -10,10 +10,87 @@
       margin: 40px auto;
       padding: 0 16px;
     }
+    button {
+      font-size: 16px;
+      padding: 8px 16px;
+    }
   </style>
 </head>
 <body>
   <h1>Eatery Order Demo</h1>
   <p>This page demonstrates the Messenger ordering and Facebook posting features for Meta App Review.</p>
+
+  <button id="connect-button">Connect Facebook Page</button>
+  <p id="connection-status"></p>
+
+  <div id="fb-root"></div>
+  <script>
+    // Public by design — the App ID is meant to be visible in client-side code.
+    // No secret ever goes in this file (see CLAUDE.md security rules).
+    const META_APP_ID = "2819926482303518";
+
+    // From App Dashboard > Facebook Login for Business > Configurations.
+    // That configuration is what actually asks for pages_show_list,
+    // pages_messaging, pages_manage_posts and pages_read_engagement — not this file.
+    const META_LOGIN_CONFIG_ID = "2360381744730579";
+
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: META_APP_ID,
+        version: "v26.0",
+      });
+    };
+
+    function loadFacebookSdk() {
+      const sdkScript = document.createElement("script");
+      sdkScript.src = "https://connect.facebook.net/en_US/sdk.js";
+      sdkScript.async = true;
+      document.body.appendChild(sdkScript);
+    }
+
+    function showConnectedPages(pageNames) {
+      const statusText = document.getElementById("connection-status");
+      statusText.textContent = "Connected Page: " + pageNames.join(", ");
+    }
+
+    function showConnectionFailed() {
+      console.log("facebook login did not complete");
+      const statusText = document.getElementById("connection-status");
+      statusText.textContent = "Connection failed or was cancelled.";
+    }
+
+    function handlePagesResponse(response) {
+      if (!response || !response.data || response.data.length === 0) {
+        showConnectionFailed();
+        return;
+      }
+
+      const pageNames = response.data.map(function (page) {
+        return page.name;
+      });
+      showConnectedPages(pageNames);
+    }
+
+    function handleLoginResponse(response) {
+      if (response.status !== "connected") {
+        showConnectionFailed();
+        return;
+      }
+
+      // pages_show_list is what lets us ask for the Pages the user just granted.
+      FB.api("/me/accounts", handlePagesResponse);
+    }
+
+    function connectFacebookPage() {
+      FB.login(handleLoginResponse, {
+        config_id: META_LOGIN_CONFIG_ID,
+        response_type: "token",
+      });
+    }
+
+    document.getElementById("connect-button").addEventListener("click", connectFacebookPage);
+
+    loadFacebookSdk();
+  </script>
 </body>
 </html>
