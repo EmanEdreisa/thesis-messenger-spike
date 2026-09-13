@@ -23,10 +23,19 @@
   <button id="connect-button">Connect Facebook Page</button>
   <p id="connection-status"></p>
 
+  <h2>Publish to Page</h2>
+  <textarea id="caption-input" rows="3" placeholder="Write a caption..."></textarea><br>
+  <button id="publish-button">Publish to Page</button>
+  <p id="publish-status"></p>
+
   <div id="fb-root"></div>
   <script>
     const META_APP_ID = "28199264823035189";
     const META_LOGIN_SCOPE = "pages_show_list,pages_messaging,pages_manage_posts,pages_read_engagement";
+
+    const PUBLISH_POST_URL = "https://axsgfztljaksrhzwpcca.supabase.co/functions/v1/publish-post";
+    // Project Settings > API > Publishable key
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_fafawNNfN0YbG9GI-i1hAw_oSx00LGJ";
 
     window.fbAsyncInit = function () {
       FB.init({
@@ -80,7 +89,45 @@
       });
     }
 
+    function showPublishResult(postId) {
+      const statusText = document.getElementById("publish-status");
+      statusText.textContent = "Published! Post ID: " + postId;
+    }
+
+    function showPublishFailed() {
+      const statusText = document.getElementById("publish-status");
+      statusText.textContent = "Publish failed.";
+    }
+
+    async function publishPost() {
+      const caption = document.getElementById("caption-input").value;
+
+      try {
+        const response = await fetch(PUBLISH_POST_URL, {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + SUPABASE_PUBLISHABLE_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ caption: caption }),
+        });
+
+        if (!response.ok) {
+          console.log("publish failed, status:", response.status);
+          showPublishFailed();
+          return;
+        }
+
+        const result = await response.json();
+        showPublishResult(result.postId);
+      } catch (error) {
+        console.log("publish failed:", error);
+        showPublishFailed();
+      }
+    }
+
     document.getElementById("connect-button").addEventListener("click", connectFacebookPage);
+    document.getElementById("publish-button").addEventListener("click", publishPost);
 
     loadFacebookSdk();
   </script>
