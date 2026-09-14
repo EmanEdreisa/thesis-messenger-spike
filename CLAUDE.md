@@ -26,11 +26,13 @@ This repo is only what Meta App Review needs to see:
 
 4\. Publishing a post to the Facebook Page
 
-5\. A small docs page (plain HTML, CSS, JavaScript in one file) used to
+5\. A small set of docs pages (plain HTML, CSS, JavaScript, each in one file)
 
-&#x20;  demonstrate 1-4 for the Meta App Review screencast. This is a demo
+&#x20;  used to demonstrate 1-4 for the Meta App Review screencast, plus a privacy
 
-&#x20;  page, not the mobile app. No React, no build step, no framework.
+&#x20;  policy page and a data deletion page that Meta requires. These are demo and
+
+&#x20;  compliance pages, not the mobile app. No React, no build step, no framework.
 
 
 
